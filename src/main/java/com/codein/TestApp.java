@@ -12,8 +12,8 @@ public class TestApp {
     public static void main(String[] args) {
         Integer maxThreadCount = extractInteger(0, 1, 65, args);
         Integer maxElementsCount = extractInteger(1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE - 1, args);
-        DataInitService multithreadService = new DataInitService(maxThreadCount, maxElementsCount);
-        multithreadService.execute();
+        PoolManager initService = new PoolManager(maxThreadCount, maxElementsCount);
+        initService.execute();
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.print("Please enter any key for print statistic: ");
@@ -23,9 +23,9 @@ public class TestApp {
             e.printStackTrace();
         }
 
-        multithreadService.shutdown();
+        initService.shutdown();
 
-        StatisticData statisticData = multithreadService.getStatistic();
+        StatisticData statisticData = initService.getStatistic();
         if (statisticData.getStatisticPerThread() != null) {
             statisticData.getStatisticPerThread().forEach(
                     statisticThreadData -> System.out.println("Thread: " + statisticThreadData.getThreadName() + " - " + statisticThreadData.getCount()));

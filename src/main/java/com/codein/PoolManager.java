@@ -2,20 +2,20 @@ package com.codein;
 
 import com.codein.data.DataService;
 import com.codein.data.statistic.StatisticData;
-import com.codein.internal.DataFillerThread;
+import com.codein.internal.DataFiller;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataInitService {
+public class PoolManager {
 
     private final Integer threadCount;
 
     private DataService dataService;
 
-    private List<DataFillerThread> threads;
+    private List<DataFiller> threads;
 
-    public DataInitService(Integer threadCount, Integer maxElementsCount) {
+    public PoolManager(Integer threadCount, Integer maxElementsCount) {
         this.threadCount = threadCount;
         threads = new ArrayList<>(threadCount);
         this.dataService = new DataService(maxElementsCount);
@@ -25,7 +25,7 @@ public class DataInitService {
     public void execute() {
         for (int x = 1; x <= threadCount; x++) {
             int timeToWait = x * 100;
-            DataFillerThread thread = new DataFillerThread(dataService, timeToWait, "Index" + x);
+            DataFiller thread = new DataFiller(dataService, timeToWait, "Index" + x);
             thread.start();
             threads.add(thread);
         }
