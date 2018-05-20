@@ -34,13 +34,13 @@ public class DataService {
             if ((!keyOfFirstElement.getThread().equals(currentThread)) || (queueSize == maxElementsCount)) {
                 Object result = itemsMap.remove(keyOfFirstElement);
                 if (result != null) {
-                    statisticService.decCountPerThread(keyOfFirstElement.getThread());
+                    statisticService.removeElement(keyOfFirstElement);
                     currentSize = currentSize - 1;
                 }
             }
         }
         itemsMap.put(dataKey, value);
-        statisticService.incCountPerThread(dataKey.getThread());
+        statisticService.saveElement(dataKey);
         currentSize = currentSize + 1;
         if (currentSize > maxSizeInQueue) {
             maxSizeInQueue = currentSize;

@@ -1,6 +1,8 @@
 package com.codein.data.statistic;
 
 
+import com.codein.data.model.DataKey;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,19 +18,21 @@ public class StatisticService {
         statisticData = new ConcurrentHashMap<>();
     }
 
-    public void incCountPerThread(Thread currentThread) {
-        Integer value = statisticData.get(currentThread);
+    public void saveElement(DataKey dataKey) {
+        Thread elementThread = dataKey.getThread();
+        Integer value = statisticData.get(elementThread);
         value = value == null ? 1 : value + 1;
-        statisticData.put(currentThread, value);
+        statisticData.put(elementThread, value);
     }
 
-    public void decCountPerThread(Thread currentThread) {
-        Integer value = statisticData.get(currentThread);
+    public void removeElement(DataKey dataKey) {
+        Thread elementThread = dataKey.getThread();
+        Integer value = statisticData.get(elementThread);
         value = value == null ? 0 : value - 1;
         if (value == 0) {
-            statisticData.remove(currentThread);
+            statisticData.remove(elementThread);
         } else {
-            statisticData.put(currentThread, value);
+            statisticData.put(elementThread, value);
         }
     }
 
