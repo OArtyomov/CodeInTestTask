@@ -5,11 +5,17 @@ import com.codein.data.statistic.StatisticData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 
 public class TestApp {
 
+    private static long startMillis = 0;
+
     public static void main(String[] args) {
+        long nanSec = System.nanoTime();
+        long curMilSec = System.currentTimeMillis();
+        startMillis = curMilSec - (nanSec / 1000000);
         Integer maxThreadCount = extractInteger(0, 1, 65, args);
         Integer maxElementsCount = extractInteger(1, Integer.MIN_VALUE + 1, Integer.MAX_VALUE - 1, args);
         PoolManager initService = new PoolManager(maxThreadCount, maxElementsCount);
@@ -28,11 +34,20 @@ public class TestApp {
         StatisticData statisticData = initService.getStatistic();
         if (statisticData.getStatisticPerThread() != null) {
             statisticData.getStatisticPerThread().forEach(
-                    statisticThreadData -> System.out.println("Thread: " + statisticThreadData.getThreadName() + " - " + statisticThreadData.getCount()));
+                    statisticThreadData ->
+                            System.out.println("Thread: " + statisticThreadData.getThreadName()
+                                    + " - " + statisticThreadData.getCount()
+                                    + ". Min time: " + nanoTimeToDateHumanString(statisticThreadData.getNanoTimeOfFirstElement())
+                                    + ". Max time: " + nanoTimeToDateHumanString(statisticThreadData.getNanoTimeOfLastElement())));
         }
         System.out.println("Max size in queue: " + statisticData.getMaxCountInQueue());
 
         exitProgramWithMessage("Bye");
+    }
+
+
+    private static String nanoTimeToDateHumanString(long nanoTime) {
+        return new Date(nanoTime / 1000000 + startMillis).toString();
     }
 
     private static void exitProgramWithMessage(String message) {
