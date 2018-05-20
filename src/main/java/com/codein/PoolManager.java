@@ -24,8 +24,7 @@ public class PoolManager {
 
     public void execute() {
         for (int x = 1; x <= threadCount; x++) {
-            int timeToWait = x * 100;
-            DataFiller thread = new DataFiller(dataService, timeToWait, "Index" + x);
+            DataFiller thread = new DataFiller(dataService, "Index" + x);
             thread.start();
             threads.add(thread);
         }

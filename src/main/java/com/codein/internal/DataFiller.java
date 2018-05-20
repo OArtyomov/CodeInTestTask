@@ -3,16 +3,14 @@ package com.codein.internal;
 
 import com.codein.data.DataService;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class DataFiller extends Thread {
 
     private final DataService dataService;
 
-    private final int timeToWait;
-
-
-    public DataFiller(DataService dataService, int timeToWait, String threadName) {
+    public DataFiller(DataService dataService, String threadName) {
         this.dataService = dataService;
-        this.timeToWait = timeToWait;
         setName(threadName);
     }
 
@@ -22,7 +20,9 @@ public class DataFiller extends Thread {
         while (!isInterrupted()) {
             dataService.add(5, this);
             try {
-                Thread.sleep(timeToWait);
+                int i = ThreadLocalRandom.current().nextInt(1, 100);
+                int timeToSleep = i * 100;
+                Thread.sleep(timeToSleep);
             } catch (InterruptedException e) {
             }
         }
