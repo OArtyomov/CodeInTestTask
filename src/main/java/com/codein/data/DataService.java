@@ -25,8 +25,8 @@ public class DataService {
     }
 
     public synchronized void add(int value, Thread currentThread) {
-        long currentTime = System.nanoTime();
-        DataKey dataKey = new DataKey(currentTime, currentThread);
+        long timeInMillis = System.currentTimeMillis();
+        DataKey dataKey = new DataKey(timeInMillis, currentThread);
         int queueSize = itemsMap.size();
         int currentSize = queueSize;
         if (queueSize > 0) {

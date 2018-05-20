@@ -1,6 +1,8 @@
 package com.codein.data.statistic;
 
 
+import java.util.LinkedList;
+
 public class StatisticThreadData {
 
     private final String threadName;
@@ -11,11 +13,19 @@ public class StatisticThreadData {
 
     private final long nanoTimeOfLastElement;
 
-    public StatisticThreadData(String threadName, Integer count, long nanoTimeOfFirstElement, long nanoTimeOfLastElement) {
+    private final LinkedList<Long> timeOfElements;
+
+    public LinkedList<Long> getTimeOfElements() {
+        return timeOfElements;
+    }
+
+    StatisticThreadData(String threadName, Integer count, long nanoTimeOfFirstElement, long nanoTimeOfLastElement, LinkedList<Long> timeOfElements) {
         this.threadName = threadName;
         this.count = count;
         this.nanoTimeOfFirstElement = nanoTimeOfFirstElement;
         this.nanoTimeOfLastElement = nanoTimeOfLastElement;
+        //Copy of time is must be here
+        this.timeOfElements = new LinkedList<>(timeOfElements);
     }
 
     public String getThreadName() {

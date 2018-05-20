@@ -22,7 +22,7 @@ public class StatisticService {
     public void saveElement(DataKey dataKey) {
         Thread elementThread = dataKey.getThread();
         LinkedList<Long> timeForElements = elementsPerThread.computeIfAbsent(elementThread, k -> new LinkedList<>());
-        timeForElements.add(dataKey.getTime());
+        timeForElements.add(dataKey.getMillisTime());
     }
 
     public void removeElement(DataKey dataKey) {
@@ -30,14 +30,14 @@ public class StatisticService {
         LinkedList<Long> timeForElements = elementsPerThread.get(elementThread);
         if (timeForElements != null) {
             //We always remove only first element in list, so, it will be cheap operation
-            timeForElements.remove(dataKey.getTime());
+            timeForElements.remove(0);
             if (timeForElements.size() == 0) {
                 elementsPerThread.remove(elementThread);
             }
         }
     }
 
-    public List<StatisticThreadData> getStatisticPerThread() {
+    public  List<StatisticThreadData> getStatisticPerThread() {
         return buildData(elementsPerThread);
     }
 
@@ -58,6 +58,6 @@ public class StatisticService {
             timeOfLast = timeOfElements.getLast();
         }
         return new StatisticThreadData(entry.getKey().getName(), elementsSize,
-                timeOfFirst, timeOfLast);
+                timeOfFirst, timeOfLast, timeOfElements);
     }
 }
