@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 public class DataService {
 
-    private final ConcurrentSkipListMap itemsMap;
+    private final ConcurrentSkipListMap<DataKey, Integer> itemsMap;
 
     private final StatisticService statisticService;
 
@@ -20,7 +20,7 @@ public class DataService {
 
     public DataService(int maxElementsCount) {
         this.maxElementsCount = maxElementsCount;
-        this.itemsMap = new ConcurrentSkipListMap(new DataKeyComparator());
+        this.itemsMap = new ConcurrentSkipListMap<>(new DataKeyComparator());
         this.statisticService = new StatisticService();
     }
 
@@ -30,7 +30,7 @@ public class DataService {
         int queueSize = itemsMap.size();
         int currentSize = queueSize;
         if (queueSize > 0) {
-            DataKey keyOfFirstElement = (DataKey) itemsMap.firstKey();
+            DataKey keyOfFirstElement = itemsMap.firstKey();
             if ((!keyOfFirstElement.getThread().equals(currentThread)) || (queueSize == maxElementsCount)) {
                 Object result = itemsMap.remove(keyOfFirstElement);
                 if (result != null) {
