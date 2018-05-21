@@ -21,7 +21,7 @@ public class DataFiller extends Thread {
             dataService.add(5, this);
             try {
                 int i = ThreadLocalRandom.current().nextInt(1, 100);
-                int timeToSleep = i * 100;
+                int timeToSleep = i * 20;
                 Thread.sleep(timeToSleep);
             } catch (InterruptedException e) {
             }

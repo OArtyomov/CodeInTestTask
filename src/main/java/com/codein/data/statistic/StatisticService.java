@@ -15,6 +15,10 @@ public class StatisticService {
 
     private final ConcurrentHashMap<Thread, LinkedList<Long>> elementsPerThread;
 
+    private int queueSize = 0;
+
+    private int maxQueueSize = 0;
+
     public StatisticService() {
         elementsPerThread = new ConcurrentHashMap<>();
     }
@@ -23,6 +27,10 @@ public class StatisticService {
         Thread elementThread = dataKey.getThread();
         LinkedList<Long> timeForElements = elementsPerThread.computeIfAbsent(elementThread, k -> new LinkedList<>());
         timeForElements.add(dataKey.getMillisTime());
+        queueSize = queueSize + 1;
+        if (queueSize > maxQueueSize){
+            maxQueueSize = queueSize;
+        }
     }
 
     public void removeElement(DataKey dataKey) {
@@ -31,14 +39,18 @@ public class StatisticService {
         if (timeForElements != null) {
             //We always remove only first element in list, so, it will be cheap operation
             timeForElements.remove(0);
+            queueSize = queueSize - 1;
+            if (queueSize > maxQueueSize){
+                maxQueueSize = queueSize;
+            }
             if (timeForElements.size() == 0) {
                 elementsPerThread.remove(elementThread);
             }
         }
     }
 
-    public  List<StatisticThreadData> getStatisticPerThread() {
-        return buildData(elementsPerThread);
+    public  StatisticData getStatistic()  {
+        return new StatisticData(maxQueueSize, buildData(elementsPerThread));
     }
 
     private List<StatisticThreadData> buildData(ConcurrentHashMap<Thread, LinkedList<Long>> elementsPerThread) {
