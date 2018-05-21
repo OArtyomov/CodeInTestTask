@@ -24,7 +24,7 @@ public class DataService {
     public synchronized void add(int value, Thread currentThread) {
         long timeInMillis = System.currentTimeMillis();
         DataKey dataKey = new DataKey(timeInMillis, currentThread);
-        int queueSize = itemsMap.size();
+        int queueSize = statisticService.getQueueSize();
         if (queueSize > 0) {
             DataKey keyOfFirstElement = itemsMap.firstKey();
             if ((!keyOfFirstElement.getThread().equals(currentThread)) || (queueSize == maxElementsCount)) {
@@ -40,6 +40,7 @@ public class DataService {
 
     //It is really important to make this method synchronized, because add method can modify data
     public synchronized StatisticData getStatistic() {
+        System.out.println(itemsMap.size());
         return statisticService.getStatistic();
     }
 }

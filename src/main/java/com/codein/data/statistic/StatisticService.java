@@ -19,6 +19,10 @@ public class StatisticService {
 
     private int maxQueueSize = 0;
 
+    public int getQueueSize() {
+        return queueSize;
+    }
+
     public StatisticService() {
         elementsPerThread = new ConcurrentHashMap<>();
     }
